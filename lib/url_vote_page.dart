@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'vote.dart';
+import 'vote_page.dart';
 
 class UrlVote extends StatelessWidget {
-  UrlVote(this.url);
+  UrlVote(this.url, this.id);
   final String url;
+  final int id;
 
   final appTitle = '먹VOTE';
 
@@ -73,9 +74,13 @@ class UrlVote extends StatelessWidget {
                       ElevatedButton(
                         onPressed: () {
                           Navigator.push( context, MaterialPageRoute(
-                            builder: (context) => VotePage(),
+                            builder: (context) => VotePage(id : id.toString()),
                           ),
                           );
+                          // Navigator.pushNamed(
+                          //   context,
+                          //   url,
+                          // );
                         },
                         child: Text(
                           '링크 열기',

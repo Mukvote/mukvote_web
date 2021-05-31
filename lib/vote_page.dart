@@ -1,52 +1,26 @@
 import 'package:flutter/material.dart';
-import 'result.dart';
+import 'result_page.dart';
 import 'class/item.dart';
 
-var items = List<Item>.generate(15, (index) {
-  int i = index % 3;
-  return Item(
-    restName: 'restaurant' + '$index',
-    peopleNum: index + i,
-    checked: false,
-  );
-});
-
-class ItemTile extends StatefulWidget{
-  ItemTile(this._item);
-  final Item _item;
-
-  @override
-  _ItemTileState createState() => _ItemTileState();
-}
-
-class _ItemTileState extends State<ItemTile> {
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: IconButton(
-        icon: (widget._item.checked) ? Icon(Icons.check, color: Colors.deepPurpleAccent,) : Icon(Icons.lens_outlined),
-        onPressed: (){
-          setState(() {
-            widget._item.checked ? widget._item.checked = false : widget._item.checked = true;
-            widget._item.checked ? widget._item.peopleNum++ : widget._item.peopleNum--;
-          });
-        },
-      ),
-      title: Text(widget._item.restName, style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold, color: (widget._item.checked) ? Colors.deepPurpleAccent : Colors.black45),),
-      trailing: Text('${widget._item.peopleNum}', style: TextStyle(fontSize: 16, color: (widget._item.checked) ? Colors.deepPurpleAccent : Colors.black45),),
-    );
-  }
-}
 
 class VotePage extends StatefulWidget{
+  final String id;
+
+  VotePage({Key key, this.id}) : super(key: key);
+
   @override
-  _VotePageState createState() => _VotePageState();
+  _VotePageState createState() => _VotePageState(id);
 }
 
 class _VotePageState extends State<VotePage> {
+  String id;
+
+  _VotePageState(this.id);
+
   @override
   Widget build(BuildContext context) {
-    final appTitle = '먹VOTE';
+    // final appTitle = '먹VOTE';
+    final appTitle = id;
 
     return MaterialApp(
       title: appTitle,
@@ -116,6 +90,42 @@ class ItemBuilder extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         return ItemTile(items[index]);
       },
+    );
+  }
+}
+
+var items = List<Item>.generate(15, (index) {
+  int i = index % 3;
+  return Item(
+    restName: 'restaurant' + '$index',
+    peopleNum: index + i,
+    checked: false,
+  );
+});
+
+class ItemTile extends StatefulWidget{
+  ItemTile(this._item);
+  final Item _item;
+
+  @override
+  _ItemTileState createState() => _ItemTileState();
+}
+
+class _ItemTileState extends State<ItemTile> {
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: IconButton(
+        icon: (widget._item.checked) ? Icon(Icons.check, color: Colors.deepPurpleAccent,) : Icon(Icons.lens_outlined),
+        onPressed: (){
+          setState(() {
+            widget._item.checked ? widget._item.checked = false : widget._item.checked = true;
+            widget._item.checked ? widget._item.peopleNum++ : widget._item.peopleNum--;
+          });
+        },
+      ),
+      title: Text(widget._item.restName, style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold, color: (widget._item.checked) ? Colors.deepPurpleAccent : Colors.black45),),
+      trailing: Text('${widget._item.peopleNum}', style: TextStyle(fontSize: 16, color: (widget._item.checked) ? Colors.deepPurpleAccent : Colors.black45),),
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'log_sign_in/login.dart';
-import 'make_vote.dart';
-import 'vote.dart';
+import 'make_vote_page.dart';
+import 'vote_page.dart';
 
 void main() => runApp(MuckVote());
 
@@ -11,10 +11,12 @@ class MuckVote extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: '먹VOTE',
-      home: VotePage(),
+      // home: VotePage(),
       initialRoute: '/login',
+
       onGenerateRoute: _getRoute,
       routes: {
+        '/login': (context) => LoginPage(),
         '/create': (context) => MakeVote(),
         '/poll': (context) => VotePage(),
       },
@@ -23,6 +25,19 @@ class MuckVote extends StatelessWidget {
   }
 
   Route<dynamic> _getRoute(RouteSettings settings) {
+
+
+
+      // Handle '/details/:id'
+      var uri = Uri.parse(settings.name);
+      if (uri.pathSegments.length == 2 &&
+          uri.pathSegments.first == 'poll') {
+        var id = uri.pathSegments[1];
+        return MaterialPageRoute(builder: (context) => VotePage(id: id));
+      }
+
+
+
     if (settings.name != '/login') {
       return null;
     }

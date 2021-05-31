@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../make_vote.dart';
+import '../make_vote_page.dart';
 import 'signup.dart';
 
 //class
@@ -132,6 +132,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                     // Validate returns true if the form is valid, or false
                     // otherwise.
                     // todo: 로그인기 id, pw 보내고 확인하기
+
                     Navigator.push(
                       context,
                       MaterialPageRoute(

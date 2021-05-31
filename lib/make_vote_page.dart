@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'url_vote.dart';
+import 'url_vote_page.dart';
 import 'package:http/http.dart' as http;
 
 class MakeVote extends StatelessWidget {
@@ -98,7 +98,7 @@ class MakeVote extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     createVote().then((value) => Navigator.push( context, MaterialPageRoute(
-                      builder: (context) => UrlVote(value.url),
+                      builder: (context) => UrlVote(value.url, value.id),
                     ),
                     ))
                     ;
