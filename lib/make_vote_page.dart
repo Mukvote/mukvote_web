@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'log_sign_in/login.dart';
 import 'url_vote_page.dart';
 import 'package:http/http.dart' as http;
 
@@ -29,7 +30,7 @@ class MakeVote extends StatelessWidget {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, dynamic>{
-        'owner' : 1,
+        'owner' : LoginPage.user_id,
         'place': options[_value],
         'categories' : checkCategories
       }),

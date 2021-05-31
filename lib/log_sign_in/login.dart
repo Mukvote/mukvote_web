@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import '../make_vote_page.dart';
 import 'signup.dart';
+import 'package:http/http.dart' as http;
 
 //class
 //import '../class/user.dart';
-
 class LoginPage extends StatelessWidget {
+  static int user_id;
+
   @override
   Widget build(BuildContext context) {
     final appTitle = '먹VOTE';
@@ -57,6 +61,31 @@ class MyCustomForm extends StatefulWidget {
 class MyCustomFormState extends State<MyCustomForm> {
   String id = '';
   String pw = '';
+
+  Future<LoginResult> loginTry() async {
+    final response = await http.post(
+      Uri.parse('http://127.0.0.1:5000/user_login'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'user_name': id,
+        'login_token': pw,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      // If the server did return a 201 CREATED response,
+      // then parse the JSON.
+      print(jsonDecode(response.body));
+      LoginPage.user_id =  LoginResult.fromJson(jsonDecode(response.body)).id;
+      return LoginResult.fromJson(jsonDecode(response.body));
+    } else {
+      // If the server did not return a 201 CREATED response,
+      // then throw an exception.
+      throw Exception('Failed to create album.');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -132,13 +161,14 @@ class MyCustomFormState extends State<MyCustomForm> {
                     // Validate returns true if the form is valid, or false
                     // otherwise.
                     // todo: 로그인기 id, pw 보내고 확인하기
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MakeVote(),
-                      ),
-                    );
+                    loginTry().then((value) => value.id < 0
+                        ? _showMyDialog()
+                        : Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MakeVote(),
+                            ),
+                          ));
                   },
                   child: Text(
                     'Login',
@@ -153,6 +183,66 @@ class MyCustomFormState extends State<MyCustomForm> {
           ),
         ],
       ),
+    );
+  }
+
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Container(
+              height: 80,
+              color: Colors.deepPurpleAccent,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'FAIL LOGIN',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
+              )),
+          titlePadding: const EdgeInsets.all(0),
+          content:
+          Text('Check Your ID or PW'),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 0),
+                shadowColor: Colors.grey,
+                primary: Colors.deepPurpleAccent,
+                shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(15.0),
+                ), // background
+              ),
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                'CLOSE',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class LoginResult {
+  final int id;
+
+  LoginResult({this.id});
+
+  factory LoginResult.fromJson(Map<String, dynamic> json) {
+    return LoginResult(
+      id: json['result'],
     );
   }
 }
