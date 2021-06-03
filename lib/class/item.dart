@@ -1,6 +1,8 @@
+import 'package:mukvote_web/vote_page.dart';
+
 class Item{
-  String restName;
+  Restaurant restaurant;
   int peopleNum;
   bool checked;
-  Item({this.restName, this.peopleNum, this.checked});
+  Item({this.peopleNum, this.checked, this.restaurant});
 }

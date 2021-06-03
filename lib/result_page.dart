@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'class/item.dart';
 
 class ResultTile extends StatefulWidget{
-  ResultTile(this._item);
-  final Item _item;
+  ResultTile(this._restaurant);
+  final Item _restaurant;
 
   @override
   _ResultTileState createState() => _ResultTileState();
@@ -13,8 +13,8 @@ class _ResultTileState extends State<ResultTile> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(widget._item.restName, style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold, color: Colors.black45),),
-      trailing: Text('${widget._item.peopleNum}', style: TextStyle(fontSize: 16, color: Colors.black45),),
+      title: Text(widget._restaurant.restaurant.name, style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold, color: Colors.black45),),
+      trailing: Text('${widget._restaurant.restaurant.place}', style: TextStyle(fontSize: 16, color: Colors.black45),),
     );
   }
 }
@@ -32,15 +32,15 @@ class _TopResultTileState extends State<TopResultTile> {
   Widget build(BuildContext context) {
     return ListTile(
       contentPadding: EdgeInsets.all(16),
-      title: Text(widget._item.restName, style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold, color: Colors.deepPurpleAccent),),
-      trailing: Text('${widget._item.peopleNum}', style: TextStyle(fontSize: 20, color: Colors.deepPurpleAccent),),
+      title: Text(widget._item.restaurant.name, style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold, color: Colors.deepPurpleAccent),),
+      trailing: Text('${widget._item.restaurant.place}', style: TextStyle(fontSize: 20, color: Colors.deepPurpleAccent),),
     );
   }
 }
 
 class ResultPage extends StatelessWidget{
-  ResultPage(this._items);
-  final List<Item> _items;
+  ResultPage(this._restaurant);
+  final List<Item> _restaurant;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,7 @@ class ResultPage extends StatelessWidget{
                 SizedBox(height: 10,),
                 Text('투표결과', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.deepPurpleAccent),),
                 SizedBox(height: 30,),
-                ResultBuilder(_items),
+                ResultBuilder(_restaurant),
               ],
             ),
           ),
@@ -78,8 +78,8 @@ class ResultPage extends StatelessWidget{
 
 
 class ResultBuilder extends StatelessWidget {
-  ResultBuilder(this._items);
-  final List<Item> _items;
+  ResultBuilder(this._restaurant);
+  final List<Item> _restaurant;
 
   @override
   Widget build(BuildContext context) {
@@ -88,13 +88,13 @@ class ResultBuilder extends StatelessWidget {
       shrinkWrap: true,
       padding: const EdgeInsets.all(8),
       // itemCount: items.length + 1,
-      itemCount: _items.length,
+      itemCount: _restaurant.length,
       separatorBuilder: (BuildContext context, int index){
         return Container(
             height: 20,
             child: Divider(height: 5));},
       itemBuilder: (BuildContext context, int index) {
-        return index > 2 ? ResultTile(_items[index]) : TopResultTile(_items[index]);
+        return index > 2 ? ResultTile(_restaurant[index]) : TopResultTile(_restaurant[index]);
       },
     );
   }
