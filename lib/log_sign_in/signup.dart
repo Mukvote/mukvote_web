@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-//import 'package:db_muckvote/log_sign_in/login.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-//class
-import '../class/user.dart';
-
-//server
-import '../server.dart';
-import 'signup_succ.dart';
+import 'login.dart';
 
 class SignUpPage extends StatelessWidget {
   @override
@@ -48,6 +44,18 @@ class SignUpPage extends StatelessWidget {
   }
 }
 
+class SignUpResult {
+  final int result;
+  SignUpResult({this.result});
+
+  factory SignUpResult.fromJson(Map<String, dynamic> json){
+    return SignUpResult(
+      result: json['result'],
+    );
+  }
+}
+
+
 // Create a Form widget.
 class SignUpForm extends StatefulWidget {
   @override
@@ -59,10 +67,32 @@ class SignUpForm extends StatefulWidget {
 // Create a corresponding State class.
 // This class holds data related to the form.
 class SignUpFormState extends State<SignUpForm> {
-  Future<UserResult> _futureUserResult;
+  //Future<UserResult> _futureUserResult;
 
   String id = '';
   String pw = '';
+
+  Future<SignUpResult> registerUser(String id, String pw) async {
+    final response = await http.post(
+      Uri.http('127.0.0.1:5000', 'user_register'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        "user_name": id,
+        'login_token': pw,
+      }),
+    );
+
+    if(response.statusCode == 200){
+      print('server return');
+      print(jsonDecode(response.body));
+      return SignUpResult.fromJson(jsonDecode(response.body));
+    } else {
+      // If the server did not return a 201 CREATED response, // then throw an exception.
+      throw Exception('Failed to create user.');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +136,10 @@ class SignUpFormState extends State<SignUpForm> {
                     ///jason 확인
                     setState(() {
                       print('$id + $pw');
-                      _futureUserResult = ServerData().registerUser(id, pw);
+                      registerUser(id, pw).then((value) => value.result == -1
+                          ? _showMyDialog()
+                          : _successSignUpDialog()
+                      );
                     });
                   },
                   child: Text(
@@ -126,25 +159,101 @@ class SignUpFormState extends State<SignUpForm> {
     );
   }
 
-  FutureBuilder<UserResult> buildFutureBuilder() {
-    print("??");
-    return
-      FutureBuilder<UserResult>(
-      future: _futureUserResult,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          String result = snapshot.data.result;
-          print("result" + result);
-          if(result == 'success') return SignUpSuccessPage();
-          else return SignUpPage();
-          // Navigator.push( context, MaterialPageRoute(
-          //   builder: (context) => LoginPage(),
-          // ));
-        } else if (snapshot.hasError) {
-          return Text('${snapshot.error}');
-        }
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Container(
+              height: 80,
+              color: Colors.deepPurpleAccent,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'FAIL to sign up',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
+              )),
+          titlePadding: const EdgeInsets.all(0),
+          content:
+          Text('Please use different ID or PW'),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 0),
+                shadowColor: Colors.grey,
+                primary: Colors.deepPurpleAccent,
+                shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(15.0),
+                ), // background
+              ),
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                'CLOSE',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-        return CircularProgressIndicator();
+  Future<void> _successSignUpDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Container(
+              height: 80,
+              color: Colors.deepPurpleAccent,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Success to sign up!',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
+              )),
+          titlePadding: const EdgeInsets.all(0),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 0),
+                shadowColor: Colors.grey,
+                primary: Colors.deepPurpleAccent,
+                shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(15.0),
+                ), // background
+              ),
+              onPressed: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+        builder: (context) => LoginPage(),
+        ),
+        ),
+              child: Text(
+                'GO to LOGIN',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        );
       },
     );
   }

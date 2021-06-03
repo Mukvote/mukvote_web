@@ -5,8 +5,6 @@ import '../make_vote_page.dart';
 import 'signup.dart';
 import 'package:http/http.dart' as http;
 
-//class
-//import '../class/user.dart';
 class LoginPage extends StatelessWidget {
   static int user_id;
 
@@ -83,7 +81,8 @@ class MyCustomFormState extends State<MyCustomForm> {
     } else {
       // If the server did not return a 201 CREATED response,
       // then throw an exception.
-      throw Exception('Failed to create album.');
+      print('not login in');
+      throw Exception('Failed to login.');
     }
   }
 
@@ -160,7 +159,6 @@ class MyCustomFormState extends State<MyCustomForm> {
                   onPressed: () {
                     // Validate returns true if the form is valid, or false
                     // otherwise.
-                    // todo: 로그인기 id, pw 보내고 확인하기
                     loginTry().then((value) => value.id < 0
                         ? _showMyDialog()
                         : Navigator.push(
