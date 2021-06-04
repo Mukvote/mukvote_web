@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'class/item.dart';
 
 class ResultTile extends StatefulWidget{
-  ResultTile(this._restaurant);
+  ResultTile(this._restaurant, this.idx);
   final Item _restaurant;
+  final int idx;
 
   @override
   _ResultTileState createState() => _ResultTileState();
@@ -13,6 +14,9 @@ class _ResultTileState extends State<ResultTile> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      leading: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Text((widget.idx + 1).toString(), style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold, color: Colors.black45),)),
       title: Text(widget._restaurant.restaurant.name, style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold, color: Colors.black45),),
       trailing: Text('${widget._restaurant.restaurant.place}', style: TextStyle(fontSize: 16, color: Colors.black45),),
     );
@@ -20,8 +24,29 @@ class _ResultTileState extends State<ResultTile> {
 }
 
 class TopResultTile extends StatefulWidget{
-  TopResultTile(this._item);
+  TopResultTile(this._item, this.idx);
   final Item _item;
+  final int idx;
+  String img = 'assets/1_dotori.png';
+
+  void bedge(int n){
+    switch(n) {
+      case 0: {
+        img = 'assets/1_dotori.png';
+      }
+      break;
+
+      case 1: {
+        img = 'assets/2_dotori.png';
+      }
+      break;
+
+      case 2: {
+        img = 'assets/3_dotori.png';
+      }
+      break;
+    }
+  }
 
   @override
   _TopResultTileState createState() => _TopResultTileState();
@@ -30,10 +55,22 @@ class TopResultTile extends StatefulWidget{
 class _TopResultTileState extends State<TopResultTile> {
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: EdgeInsets.all(16),
-      title: Text(widget._item.restaurant.name, style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold, color: Colors.deepPurpleAccent),),
-      trailing: Text('${widget._item.restaurant.place}', style: TextStyle(fontSize: 20, color: Colors.deepPurpleAccent),),
+    widget.bedge(widget.idx);
+
+    return Container(
+      // decoration: new BoxDecoration (
+      //     color: Color(0XFF7C4DFF)
+      // ),
+      child: ListTile(
+        contentPadding: EdgeInsets.all(16),
+        leading: Image.asset(
+            widget.img,
+            width: 50,
+            height: widget.idx == 0 ? 100 : 40 ,
+        ),
+        title: Text(widget._item.restaurant.name, style: TextStyle(fontSize: widget.idx == 0 ? 20 : 18,fontWeight: FontWeight.bold, color: Colors.deepPurpleAccent),),
+        trailing: Text('${widget._item.restaurant.place}', style: TextStyle(fontSize: widget.idx == 0 ? 20 : 18, color: Colors.deepPurpleAccent),),
+      ),
     );
   }
 }
@@ -61,11 +98,12 @@ class ResultPage extends StatelessWidget{
           child: SingleChildScrollView(
             child: Column(
               children: [
+                SizedBox(height: 20,),
+                Image.asset(
+                    'assets/투표완료.png',
+                  width: 180,
+                ),
                 SizedBox(height: 40,),
-                Icon(Icons.check, size: 30, color: Colors.deepPurpleAccent,),
-                SizedBox(height: 10,),
-                Text('투표결과', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.deepPurpleAccent),),
-                SizedBox(height: 30,),
                 ResultBuilder(_restaurant),
               ],
             ),
@@ -83,6 +121,18 @@ class ResultBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // return ListView.builder(
+    //     physics: ClampingScrollPhysics(),
+    //     padding: const EdgeInsets.all(8),
+    //     itemCount: _restaurant.length,
+    //     itemBuilder: (BuildContext context, int index) {
+    //       return Container(
+    //         height: 50,
+    //         color: Color(0X1A7C4DFF),
+    //         child: ResultTile(_restaurant[index])
+    //       );
+    //     }
+    // );
     return ListView.separated(
       physics: ClampingScrollPhysics(),
       shrinkWrap: true,
@@ -94,7 +144,7 @@ class ResultBuilder extends StatelessWidget {
             height: 20,
             child: Divider(height: 5));},
       itemBuilder: (BuildContext context, int index) {
-        return index > 2 ? ResultTile(_restaurant[index]) : TopResultTile(_restaurant[index]);
+        return index > 2 ? ResultTile(_restaurant[index], index) : TopResultTile(_restaurant[index], index);
       },
     );
   }

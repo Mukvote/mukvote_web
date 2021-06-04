@@ -28,15 +28,20 @@ class LoginPage extends StatelessWidget {
           child: ListView(
             padding: EdgeInsets.symmetric(horizontal: 50.0),
             children: [
-              SizedBox(height: 150),
+              SizedBox(height: 80),
               Text(appTitle,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 40,
+                    fontSize: 35,
                     color: Colors.deepPurpleAccent,
                     fontWeight: FontWeight.bold,
                   )),
-              SizedBox(height: 100),
+              SizedBox(height: 10),
+              Image.asset(
+                'assets/login.png',
+                height: 150,
+              ),
+              SizedBox(height: 80),
               MyCustomForm(),
             ],
           ),

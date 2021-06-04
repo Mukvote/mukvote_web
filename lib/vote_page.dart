@@ -121,11 +121,15 @@ class RestaurantList extends StatelessWidget {
           SizedBox(height: 40,),
           ElevatedButton(
             onPressed: () {
-              sendVoteResult().then((value) => Navigator.push( context, MaterialPageRoute(
-                builder: (context) => ResultPage(restaurantItems),
-              ))
-              ,
-              );
+              //todo: undo comment
+              // sendVoteResult().then((value) => Navigator.push( context, MaterialPageRoute(
+              //   builder: (context) => ResultPage(restaurantItems),
+              // ))
+              // ,
+              // );
+              Navigator.push( context, MaterialPageRoute(
+                    builder: (context) => ResultPage(restaurantItems),
+                  ));
             },
             child: Text(
               '투표하기',

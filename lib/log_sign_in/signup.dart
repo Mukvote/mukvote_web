@@ -16,25 +16,20 @@ class SignUpPage extends StatelessWidget {
           child: ListView(
             padding: EdgeInsets.symmetric(horizontal: 50.0),
             children: [
-              SizedBox(height: 150),
+              SizedBox(height: 80),
               Text(appTitle,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 40,
+                    fontSize: 35,
                     color: Colors.deepPurpleAccent,
                     fontWeight: FontWeight.bold,
-                  )
+                  )),
+              SizedBox(height: 10),
+              Image.asset(
+                'assets/signup.png',
+                height: 150,
               ),
-              SizedBox(height: 30),
-              Text('회원가입',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.deepPurpleAccent,
-                    fontWeight: FontWeight.bold,
-                  )
-              ),
-              SizedBox(height: 40),
+              SizedBox(height: 80),
               SignUpForm(),
             ],
           ),

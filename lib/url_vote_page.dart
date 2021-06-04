@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'vote_page.dart';
+import 'package:flutter/services.dart';
 
 class UrlVote extends StatelessWidget {
   UrlVote(this.url, this.id);
@@ -7,6 +8,7 @@ class UrlVote extends StatelessWidget {
   final int id;
 
   final appTitle = '먹VOTE';
+
 
   @override
   Widget build(BuildContext context) {
@@ -50,13 +52,11 @@ class UrlVote extends StatelessWidget {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-
+                          //clip board
+                          Clipboard.setData(new ClipboardData(text: 'http://127.0.0.1:5000/' + url));
                         },
                         child: Text(
                           '링크 복사',
-                          // style: TextStyle(
-                          //   fontSize: 18,
-                          // ),
                         ),
                         style: ButtonStyle(
                           //padding: MaterialStateProperty.all(EdgeInsets.fromLTRB(50, 15, 50, 15)),
