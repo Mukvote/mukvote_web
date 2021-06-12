@@ -30,6 +30,8 @@ class MuckVote extends StatelessWidget {
 
       // Handle '/details/:id'
       var uri = Uri.parse(settings.name);
+      print('uri');
+      print(uri);
       if (uri.pathSegments.length == 2 &&
           uri.pathSegments.first == 'poll') {
         var id = uri.pathSegments[1];
