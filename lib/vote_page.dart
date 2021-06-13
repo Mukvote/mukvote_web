@@ -88,11 +88,12 @@ class RestaurantList extends StatelessWidget {
         restarant_id: restaurantItems[index].restaurant.id,
       );
     });
+    print(resultRestaurant);
     print(jsonEncode(<String, dynamic>{
       'data' : resultRestaurant,
     }));
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:5000/' + id + "/" + LoginPage.user_id.toString()),
+      Uri.parse('http://127.0.0.1:5000/vote/' + id + "/" + LoginPage.user_id.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

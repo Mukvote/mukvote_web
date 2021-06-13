@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'class/item.dart';
+import 'package:http/http.dart' as http;
 
 class ResultTile extends StatefulWidget{
   ResultTile(this._restaurant, this.idx);
@@ -137,3 +140,45 @@ class ResultBuilder extends StatelessWidget {
     );
   }
 }
+
+
+// For connection server
+// A function that converts a response body into a List<Photo>.
+List<Result> parseRestaurants(String responseBody) {
+  var restaurantJson = jsonDecode(responseBody)['poll_data'] as List;
+  List restaurants = restaurantJson.map((tagJson) => Result.fromJson(tagJson)).toList();
+  return restaurants;
+}
+
+
+Future<List<Result>> fetchRestaurants(http.Client client, String id) async {
+  final response = await client
+      .get(Uri.parse('http://127.0.0.1:5000/vote/result/' + id));
+  // Use the compute function to run parsePhotos in a separate isolate.
+  return parseRestaurants(response.body);
+}
+
+
+class Result {
+  final int participantNum;
+  final int ranking;
+  final String category;
+  final String name;
+
+  Result({
+    this.participantNum,
+    this.ranking,
+    this.category,
+    this.name,
+  });
+
+  factory Result.fromJson(dynamic json) {
+    return Result(
+      participantNum: json['number_of_participant'] as int,
+      ranking: json['ranking_수정필요'] as int,
+      category: json['restaurant_category'] as String,
+      name: json['restaurant_name'] as String,
+    );
+  }
+}
+
