@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'log_sign_in/login.dart';
@@ -8,6 +9,9 @@ import 'package:http/http.dart' as http;
 
 
 class VotePage extends StatefulWidget{
+  static Route<VotePage> route(String id) => 	MaterialPageRoute(
+    builder: (context) => VotePage(id : id),
+  );
   final String id;
 
   VotePage({Key key, this.id}) : super(key: key);
@@ -26,20 +30,20 @@ class _VotePageState extends State<VotePage> {
     // final appTitle = '먹VOTE';
     final appTitle = id;
 
-    return MaterialApp(
+    // return Center(child: CircularProgressIndicator());
+
+    return LoginPage.user_id == null ? LoginPage() : MaterialApp(
       title: appTitle,
       home: Scaffold(
         appBar: AppBar(
-          title: Text(appTitle,
+          title: Text('투표하기',
               style: TextStyle(
                 color: Colors.deepPurpleAccent,
                 fontWeight: FontWeight.bold,
               )),
           backgroundColor: Colors.white,
         ),
-        body: LoginPage.user_id == null ? Navigator.push( context, MaterialPageRoute(
-          builder: (context) => LoginPage(),
-        )) :
+        body:
         FutureBuilder<List<Restaurant>>(
           future: fetchRestaurants(http.Client(), id),
           builder: (context, snapshot) {
@@ -72,6 +76,10 @@ class RestaurantList extends StatelessWidget {
   RestaurantList({Key key, this.restaurants, this.id}) : super(key: key);
   var restaurantItems;
   var resultRestaurant;
+
+  Location currentLocation = window.location;
+
+
 
   Future sendVoteResult() async {
     resultRestaurant = List<VoteResult>.generate(restaurantItems.length, (index) {
@@ -108,6 +116,7 @@ class RestaurantList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(currentLocation.href);
     restaurantItems = List<Item>.generate(restaurants.length, (index) {
       return Item(
         restaurant: restaurants[index],

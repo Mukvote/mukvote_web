@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'app_router.dart';
+import 'log_sign_in/AppRoutes.dart';
 import 'vote_page.dart';
 import 'package:flutter/services.dart';
 
@@ -73,10 +75,17 @@ class UrlVote extends StatelessWidget {
                       SizedBox(width: 10),
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.push( context, MaterialPageRoute(
-                            builder: (context) => VotePage(id : id.toString()),
-                          ),
+                          AppRouter.router.navigateTo(
+                            context,
+                            AppRoutes.getDetailRoute(
+                              AppRoutes.contactDetailRoute.route,
+                              id.toString(),
+                            ),
                           );
+                          // Navigator.push( context, MaterialPageRoute(
+                          //   builder: (context) => VotePage(id : id.toString()),
+                          // ),
+                          // );
                           // Navigator.pushNamed(
                           //   context,
                           //   url,

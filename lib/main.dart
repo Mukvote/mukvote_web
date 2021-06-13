@@ -1,34 +1,54 @@
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:mukvote_web/log_sign_in/AppRoutes.dart';
+import 'package:mukvote_web/log_sign_in/signup.dart';
+import 'package:mukvote_web/router.dart';
+import 'app_router.dart';
 import 'log_sign_in/login.dart';
 import 'make_vote_page.dart';
 import 'vote_page.dart';
 
-void main() => runApp(MuckVote());
+void main() {
+  runApp(MuckVote());
+}
 
-class MuckVote extends StatelessWidget {
+class MuckVote extends StatefulWidget {
+  @override
+  _MuckVote createState() => _MuckVote();
+}
+class _MuckVote extends State<MuckVote> {
+  @override
+  void initState() {
+    super.initState();
+    AppRouter appRouter = AppRouter(
+      routes: AppRoutes.routes,
+      // notFoundHandler: AppRoutes.routeNotFoundHandler,
+    );
 
+    appRouter.setupRoutes();
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: '먹VOTE',
       // home: VotePage(),
+      onGenerateRoute: AppRouter.router.generator,
       initialRoute: '/login',
-
-      onGenerateRoute: _getRoute,
+      debugShowCheckedModeBanner: true,
+      // onGenerateRoute: _getRoute,
       routes: {
         '/login': (context) => LoginPage(),
+        '/signup': (context) => SignUpPage(),
         '/create': (context) => MakeVote(),
         '/poll': (context) => VotePage(),
       },
       // TODO: Add a theme (103)
+
     );
   }
 
   Route<dynamic> _getRoute(RouteSettings settings) {
-
-
-
-      // Handle '/details/:id'
+      // Handle '/poll/:id'
       var uri = Uri.parse(settings.name);
       if (uri.pathSegments.length == 2 &&
           uri.pathSegments.first == 'poll') {

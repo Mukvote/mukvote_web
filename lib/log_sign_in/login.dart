@@ -7,6 +7,8 @@ import 'package:http/http.dart' as http;
 
 class LoginPage extends StatelessWidget {
   static int user_id;
+  static Route<LoginPage> route() =>
+      MaterialPageRoute(builder: (context) => LoginPage());
 
   @override
   Widget build(BuildContext context) {
