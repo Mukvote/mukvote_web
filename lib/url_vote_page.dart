@@ -41,11 +41,30 @@ class UrlVote extends StatelessWidget {
                   SizedBox(height: 10),
                   Container(
                     padding: EdgeInsets.all(20),
+                      width: 200,
                       decoration: BoxDecoration(
                         color: Color(0xFFBDA6FF),
                         borderRadius: BorderRadius.circular(8.0),
                       ),
-                      child: Text('http://127.0.0.1:5000/' + url),
+                      //child: Text('http://127.0.0.1:8989/poll/' + id.toString()),
+                      child: Center(child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Room Key:  ',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold
+                            ),
+                          ),
+                          Text(id.toString(),
+                            style: TextStyle(
+                                color: Colors.deepPurpleAccent,
+                                fontWeight: FontWeight.bold
+                            ),
+                          ),
+                        ],
+                      )),
+
                   ),
                   SizedBox(height: 100),
                   Row(
@@ -55,21 +74,21 @@ class UrlVote extends StatelessWidget {
                       ElevatedButton(
                         onPressed: () {
                           //clip board
-                          Clipboard.setData(new ClipboardData(text: 'http://127.0.0.1:5000/' + url));
+                          Clipboard.setData(new ClipboardData(text: id.toString()));
+                         // Clipboard.setData(new ClipboardData(text: 'http://127.0.0.1:8989/#/poll/' + id.toString()));
                         },
                         child: Text(
-                          '링크 복사',
+                          'key 복사',
                         ),
                         style: ButtonStyle(
                           //padding: MaterialStateProperty.all(EdgeInsets.fromLTRB(50, 15, 50, 15)),
                             backgroundColor: MaterialStateProperty.all<Color>(
                                 Colors.white),
                             foregroundColor: MaterialStateProperty.all<Color>(
-                                Colors.black),
+                                Colors.deepPurpleAccent),
                             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30.0),
-                                    side: BorderSide(color: Colors.deepPurpleAccent)
                                 ))),
                       ),
                       SizedBox(width: 10),
@@ -92,14 +111,14 @@ class UrlVote extends StatelessWidget {
                           // );
                         },
                         child: Text(
-                          '링크 열기',
+                          ' 열기',
                         ),
                         style: ButtonStyle(
                           //padding: MaterialStateProperty.all(EdgeInsets.fromLTRB(50, 15, 50, 15)),
                             backgroundColor: MaterialStateProperty.all<Color>(
                                 Colors.deepPurpleAccent),
                             foregroundColor: MaterialStateProperty.all<Color>(
-                                Colors.black),
+                                Colors.white),
                             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30.0),

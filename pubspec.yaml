@@ -54,6 +54,9 @@ flutter:
     - assets/3_dotori.png
     - assets/login.png
     - assets/signup.png
+    - assets/투표하기.png
+    - assets/new_room.png
+    - assets/join_room.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

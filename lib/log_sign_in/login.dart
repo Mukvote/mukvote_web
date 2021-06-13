@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:mukvote_web/home.dart';
 import '../make_vote_page.dart';
 import 'signup.dart';
 import 'package:http/http.dart' as http;
@@ -166,14 +167,25 @@ class MyCustomFormState extends State<MyCustomForm> {
                   onPressed: () {
                     // Validate returns true if the form is valid, or false
                     // otherwise.
+
+                    // loginTry().then((value) => value.id < 0
+                    //     ? _showMyDialog()
+                    //     : Navigator.push(
+                    //         context,
+                    //         MaterialPageRoute(
+                    //           builder: (context) => MakeVote(),
+                    //         ),
+                    //       ));
+
                     loginTry().then((value) => value.id < 0
                         ? _showMyDialog()
                         : Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MakeVote(),
-                            ),
-                          ));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HomePage(),
+                      ),
+                    ));
+
                   },
                   child: Text(
                     'Login',

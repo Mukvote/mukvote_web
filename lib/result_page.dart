@@ -121,18 +121,6 @@ class ResultBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return ListView.builder(
-    //     physics: ClampingScrollPhysics(),
-    //     padding: const EdgeInsets.all(8),
-    //     itemCount: _restaurant.length,
-    //     itemBuilder: (BuildContext context, int index) {
-    //       return Container(
-    //         height: 50,
-    //         color: Color(0X1A7C4DFF),
-    //         child: ResultTile(_restaurant[index])
-    //       );
-    //     }
-    // );
     return ListView.separated(
       physics: ClampingScrollPhysics(),
       shrinkWrap: true,

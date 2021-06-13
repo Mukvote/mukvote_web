@@ -151,7 +151,7 @@ class RestaurantList extends StatelessWidget {
                 backgroundColor: MaterialStateProperty.all<Color>(
                     Colors.deepPurpleAccent),
                 foregroundColor: MaterialStateProperty.all<Color>(
-                    Colors.black),
+                    Colors.white),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
