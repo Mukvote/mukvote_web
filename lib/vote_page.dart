@@ -60,13 +60,13 @@ class _VotePageState extends State<VotePage> {
 }
 
 class VoteResult{
-  int restarant_id;
-  bool restarant_vote;
-  VoteResult({this.restarant_id, this.restarant_vote});
+  int restaurant_id;
+  bool restaurant_vote;
+  VoteResult({this.restaurant_id, this.restaurant_vote});
 
   Map toJson() => {
-    'restarant_id': restarant_id,
-    'restarant_vote': restarant_vote,
+    'restaurant_id': restaurant_id,
+    'restaurant_vote': restaurant_vote,
   };
 }
 
@@ -79,13 +79,11 @@ class RestaurantList extends StatelessWidget {
 
   Location currentLocation = window.location;
 
-
-
   Future sendVoteResult() async {
     resultRestaurant = List<VoteResult>.generate(restaurantItems.length, (index) {
       return VoteResult(
-        restarant_vote: restaurantItems[index].checked,
-        restarant_id: restaurantItems[index].restaurant.id,
+        restaurant_vote: restaurantItems[index].checked,
+        restaurant_id: restaurantItems[index].restaurant.id,
       );
     });
     print(resultRestaurant);
@@ -132,14 +130,14 @@ class RestaurantList extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               //todo: undo comment
-              // sendVoteResult().then((value) => Navigator.push( context, MaterialPageRoute(
-              //   builder: (context) => ResultPage(restaurantItems),
-              // ))
-              // ,
-              // );
-              Navigator.push( context, MaterialPageRoute(
-                    builder: (context) => ResultPage(restaurantItems),
-                  ));
+              sendVoteResult().then((value) => Navigator.push( context, MaterialPageRoute(
+                builder: (context) => ResultPage(id),
+              ))
+              ,
+              );
+              // Navigator.push( context, MaterialPageRoute(
+              //       builder: (context) => ResultPage(restaurantItems),
+              //     ));
             },
             child: Text(
               '투표하기',
