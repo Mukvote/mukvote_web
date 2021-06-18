@@ -27,7 +27,8 @@ class LoginPage extends StatelessWidget {
         //   ),
         //   backgroundColor: Colors.white,
         // ),
-        body: SafeArea(
+        body:
+        SafeArea(
           child: ListView(
             padding: EdgeInsets.symmetric(horizontal: 50.0),
             children: [

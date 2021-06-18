@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:mukvote_web/search_page.dart';
 
 class MenuListPage extends StatefulWidget {
   @override
@@ -13,9 +14,6 @@ class _MenuListPageState extends State<MenuListPage> {
   @override
   Widget build(BuildContext context) {
 
-    //리스트 나중에 삭제하기!!
-    List<Restaurant> rList =
-    List<Restaurant>.generate(3, (int index) => Restaurant(name: index.toString(),id: index, place: 'a', category: '한식', priority: 0));
     return DefaultTabController(
       length: 4,
       child: Scaffold(
@@ -29,6 +27,22 @@ class _MenuListPageState extends State<MenuListPage> {
               color: Colors.deepPurpleAccent, // add custom icons also
             ),
           ),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.search,
+                color: Colors.deepPurpleAccent,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => SearchPage(),
+                  ),
+                ).then((value) => Navigator.pop(context));
+              },
+            ),
+          ],
           title: Text('먹VOTE',
               style: TextStyle(
                 color: Colors.deepPurpleAccent,
