@@ -1,5 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'vote_page.dart';
+import 'package:http/http.dart' as http;
 
 class MenuListPage extends StatefulWidget {
   @override
@@ -48,11 +50,47 @@ class _MenuListPageState extends State<MenuListPage> {
         ),
         body: TabBarView(
           children: [
-            //Center(child: Text('양덕리스트')),
-            ListView(children: [YangdukBuilder(rList)]),
-            Center(child: Text('법원')),
-            Center(child: Text('영일대')),
-            Center(child: Text('배달')),
+            //Yangdeok
+            FutureBuilder<List<Restaurant>>(
+              future: fetchRestaurants(http.Client(), 'yangdeok'),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) print(snapshot.error);
+
+                return snapshot.hasData
+                    ? ListView(children: [ListkBuilder(snapshot.data)])
+                    : Center(child: CircularProgressIndicator());
+              },
+            ),
+            FutureBuilder<List<Restaurant>>(
+              future: fetchRestaurants2(http.Client(), 'beobwon'),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) print(snapshot.error);
+
+                return snapshot.hasData
+                    ? ListView(children: [ListkBuilder(snapshot.data)])
+                    : Center(child: CircularProgressIndicator());
+              },
+            ),
+            FutureBuilder<List<Restaurant>>(
+              future: fetchRestaurants(http.Client(), 'yeongildae'),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) print(snapshot.error);
+
+                return snapshot.hasData
+                    ? ListView(children: [ListkBuilder(snapshot.data)])
+                    : Center(child: CircularProgressIndicator());
+              },
+            ),
+            FutureBuilder<List<Restaurant>>(
+              future: fetchRestaurants2(http.Client(), 'order'),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) print(snapshot.error);
+
+                return snapshot.hasData
+                    ? ListView(children: [ListkBuilder(snapshot.data)])
+                    : Center(child: CircularProgressIndicator());
+              },
+            ),
           ],
         ),
       ),
@@ -60,8 +98,8 @@ class _MenuListPageState extends State<MenuListPage> {
   }
 }
 
-class YangdukBuilder extends StatelessWidget {
-  YangdukBuilder(this.restaurantItems);
+class ListkBuilder extends StatelessWidget {
+  ListkBuilder(this.restaurantItems);
   var restaurantItems;
   @override
   Widget build(BuildContext context) {
@@ -82,6 +120,61 @@ class YangdukBuilder extends StatelessWidget {
           trailing: Text(restaurantItems[index].category, style: TextStyle(fontSize: 16, color: Colors.deepPurpleAccent,),
         ));
       },
+    );
+  }
+}
+
+// For connection server
+// A function that converts a response body into a List<Photo>.
+List<Restaurant> parseRestaurants(String responseBody) {
+  var restaurantJson = jsonDecode(responseBody)['poll_data'] as List;
+  List restaurants = restaurantJson.map((tagJson) => Restaurant.fromJson(tagJson)).toList();
+  return restaurants;
+}
+
+
+Future<List<Restaurant>> fetchRestaurants(http.Client client, String place) async {
+  final response = await client
+      .get(Uri.parse('http://127.0.0.1:5000/poll/' + '36'));
+  // .get(Uri.parse('http://127.0.0.1:5000/restaurant/' + place));
+  // Use the compute function to run parsePhotos in a separate isolate.
+  return parseRestaurants(response.body);
+}
+
+Future<List<Restaurant>> fetchRestaurants2(http.Client client, String place) async {
+  final response = await client
+      .get(Uri.parse('http://127.0.0.1:5000/poll/' + '40'));
+  // .get(Uri.parse('http://127.0.0.1:5000/restaurant/' + place));
+  // Use the compute function to run parsePhotos in a separate isolate.
+  return parseRestaurants(response.body);
+}
+
+
+class Restaurant {
+  final int orderCount;
+  final int id;
+  final String category;
+  final String name;
+  final String place;
+  final int priority;
+
+  Restaurant({
+    this.orderCount,
+    this.id,
+    this.category,
+    this.name,
+    this.place,
+    this.priority
+  });
+
+  factory Restaurant.fromJson(dynamic json) {
+    return Restaurant(
+      orderCount: json['order_count'] as int,
+      id: json['restaurant_id'] as int,
+      category: json['restaurant_category'] as String,
+      name: json['restaurant_name'] as String,
+      place: json['restaurant_place'] as String,
+      priority: json['restaurant_priority'] as int,
     );
   }
 }
