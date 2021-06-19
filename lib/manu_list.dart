@@ -66,7 +66,7 @@ class _MenuListPageState extends State<MenuListPage> {
           children: [
             //Yangdeok
             FutureBuilder<List<Restaurant>>(
-              future: fetchRestaurants(http.Client(), 'yangdeok'),
+              future: fetchRestaurants(http.Client(), '양덕'),
               builder: (context, snapshot) {
                 if (snapshot.hasError) print(snapshot.error);
 
@@ -75,8 +75,9 @@ class _MenuListPageState extends State<MenuListPage> {
                     : Center(child: CircularProgressIndicator());
               },
             ),
+            //beobwon
             FutureBuilder<List<Restaurant>>(
-              future: fetchRestaurants2(http.Client(), 'beobwon'),
+              future: fetchRestaurants(http.Client(), '법원'),
               builder: (context, snapshot) {
                 if (snapshot.hasError) print(snapshot.error);
 
@@ -85,8 +86,9 @@ class _MenuListPageState extends State<MenuListPage> {
                     : Center(child: CircularProgressIndicator());
               },
             ),
+            //yeongildae
             FutureBuilder<List<Restaurant>>(
-              future: fetchRestaurants(http.Client(), 'yeongildae'),
+              future: fetchRestaurants(http.Client(), '영일대'),
               builder: (context, snapshot) {
                 if (snapshot.hasError) print(snapshot.error);
 
@@ -95,8 +97,9 @@ class _MenuListPageState extends State<MenuListPage> {
                     : Center(child: CircularProgressIndicator());
               },
             ),
+            //order
             FutureBuilder<List<Restaurant>>(
-              future: fetchRestaurants2(http.Client(), 'order'),
+              future: fetchRestaurants(http.Client(), '배달'),
               builder: (context, snapshot) {
                 if (snapshot.hasError) print(snapshot.error);
 
@@ -141,7 +144,7 @@ class ListkBuilder extends StatelessWidget {
 // For connection server
 // A function that converts a response body into a List<Photo>.
 List<Restaurant> parseRestaurants(String responseBody) {
-  var restaurantJson = jsonDecode(responseBody)['poll_data'] as List;
+  var restaurantJson = jsonDecode(responseBody)['restaurant_data'] as List;
   List restaurants = restaurantJson.map((tagJson) => Restaurant.fromJson(tagJson)).toList();
   return restaurants;
 }
@@ -149,20 +152,11 @@ List<Restaurant> parseRestaurants(String responseBody) {
 
 Future<List<Restaurant>> fetchRestaurants(http.Client client, String place) async {
   final response = await client
-      .get(Uri.parse('http://127.0.0.1:5000/poll/' + '36'));
-  // .get(Uri.parse('http://127.0.0.1:5000/restaurant/' + place));
+      // .get(Uri.parse('http://127.0.0.1:5000/poll/' + '36'));
+  .get(Uri.parse('http://127.0.0.1:5000/restaurant/' + place));
   // Use the compute function to run parsePhotos in a separate isolate.
   return parseRestaurants(response.body);
 }
-
-Future<List<Restaurant>> fetchRestaurants2(http.Client client, String place) async {
-  final response = await client
-      .get(Uri.parse('http://127.0.0.1:5000/poll/' + '40'));
-  // .get(Uri.parse('http://127.0.0.1:5000/restaurant/' + place));
-  // Use the compute function to run parsePhotos in a separate isolate.
-  return parseRestaurants(response.body);
-}
-
 
 class Restaurant {
   final int orderCount;
