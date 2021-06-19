@@ -21,7 +21,7 @@ class _ResultTileState extends State<ResultTile> {
         padding: EdgeInsets.symmetric(horizontal: 20),
           child: Text((widget.idx + 1).toString(), style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold, color: Colors.black45),)),
       title: Text(widget._restaurant.name, style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold, color: Colors.black45),),
-      trailing: Text('${widget._restaurant.result}', style: TextStyle(fontSize: 16, color: Colors.black45),),
+      trailing: Text('${widget._restaurant.result*100}%', style: TextStyle(fontSize: 16, color: Colors.black45),),
     );
   }
 }
@@ -72,7 +72,7 @@ class _TopResultTileState extends State<TopResultTile> {
             height: widget.idx == 0 ? 100 : 40 ,
         ),
         title: Text(widget._item.name, style: TextStyle(fontSize: widget.idx == 0 ? 20 : 18,fontWeight: FontWeight.bold, color: Colors.deepPurpleAccent),),
-        trailing: Text('${widget._item.result}', style: TextStyle(fontSize: widget.idx == 0 ? 20 : 18, color: Colors.deepPurpleAccent),),
+        trailing: Text('${widget._item.result*100}%', style: TextStyle(fontSize: widget.idx == 0 ? 20 : 18, color: Colors.deepPurpleAccent),),
       ),
     );
   }
@@ -135,22 +135,33 @@ class ResultBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      physics: ClampingScrollPhysics(),
-      shrinkWrap: true,
-      padding: const EdgeInsets.all(8),
-      // itemCount: items.length + 1,
-      itemCount: _restaurant.length,
-      separatorBuilder: (BuildContext context, int index){
-        return Container(
-            height: 20,
-            child: Divider(height: 5));
+    return
+      Column(
+        children: [
+          Text(_restaurant[0].participantNum.toString() + '명 참여중',style: TextStyle(
+            color: Colors.deepPurpleAccent,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
 
-        },
-      itemBuilder: (BuildContext context, int index) {
-        return index > 2 ? ResultTile(_restaurant[index], index) : TopResultTile(_restaurant[index], index);
-      },
-    );
+          ),),
+          ListView.separated(
+          physics: ClampingScrollPhysics(),
+          shrinkWrap: true,
+          padding: const EdgeInsets.all(8),
+          // itemCount: items.length + 1,
+          itemCount: _restaurant.length,
+          separatorBuilder: (BuildContext context, int index){
+            return Container(
+                height: 20,
+                child: Divider(height: 5));
+
+            },
+          itemBuilder: (BuildContext context, int index) {
+            return index > 2 ? ResultTile(_restaurant[index], index) : TopResultTile(_restaurant[index], index);
+          },
+    ),
+        ],
+      );
   }
 }
 

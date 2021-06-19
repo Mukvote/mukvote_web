@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mukvote_web/manu_list.dart';
 
+import 'check_vote.dart';
 import 'make_vote_page.dart';
 import 'vote_page.dart';
 
@@ -133,7 +134,7 @@ class _HomePageState extends State<HomePage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => VotePage(id : _roomController.text),
+                                  builder: (context) => CheckVotePage(id : _roomController.text),
                                 ));
                           },
                           child: Text(
