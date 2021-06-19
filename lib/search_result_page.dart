@@ -39,7 +39,8 @@ class _SearchResultPage extends State<SearchResultPage> {
               fontWeight: FontWeight.bold,
             )),
         backgroundColor: Colors.white,),
-      body: FutureBuilder<List<Restaurant>>(
+      body:
+      FutureBuilder<List<Restaurant>>(
           future: fetchRestaurants(http.Client(), keyword),
           builder: (context, snapshot) {
             if (snapshot.hasError) print(snapshot.error);
@@ -93,29 +94,20 @@ class ListkBuilder extends StatelessWidget {
 // For connection server
 // A function that converts a response body into a List<Photo>.
 List<Restaurant> parseRestaurants(String responseBody) {
-  var restaurantJson = jsonDecode(responseBody)['poll_data'] as List;
+  var restaurantJson = jsonDecode(responseBody)['search_result'] as List;
   List restaurants =
       restaurantJson.map((tagJson) => Restaurant.fromJson(tagJson)).toList();
   return restaurants;
 }
 
 Future<List<Restaurant>> fetchRestaurants(
-    http.Client client, String place) async {
+    http.Client client, String keyword) async {
   final response =
-      await client.get(Uri.parse('http://127.0.0.1:5000/poll/' + '36'));
-  // .get(Uri.parse('http://127.0.0.1:5000/restaurant/' + place));
+      await client.get(Uri.parse('http://127.0.0.1:5000/restaurant/search/' + keyword));
   // Use the compute function to run parsePhotos in a separate isolate.
   return parseRestaurants(response.body);
 }
 
-Future<List<Restaurant>> fetchRestaurants2(
-    http.Client client, String place) async {
-  final response =
-      await client.get(Uri.parse('http://127.0.0.1:5000/poll/' + '40'));
-  // .get(Uri.parse('http://127.0.0.1:5000/restaurant/' + place));
-  // Use the compute function to run parsePhotos in a separate isolate.
-  return parseRestaurants(response.body);
-}
 
 class Restaurant {
   final int orderCount;

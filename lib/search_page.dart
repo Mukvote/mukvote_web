@@ -62,7 +62,7 @@ class _SearchPage extends State<SearchPage> {
                   )),
               SizedBox(height: 10),
               Image.asset(
-                'assets/login.png',
+                'assets/검색.png',
                 height: 150,
               ),
               SizedBox(height: 40),
