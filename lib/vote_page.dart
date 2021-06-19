@@ -50,7 +50,11 @@ class _VotePageState extends State<VotePage> {
             if (snapshot.hasError) print(snapshot.error);
 
             return snapshot.hasData
-                ? RestaurantList(restaurants: snapshot.data, id: id)
+                ? (snapshot.data[0].id == -1 ?
+                Center(child: Text(
+                  '방을 찾을 수 없습니다.', style: TextStyle(color: Colors.deepPurpleAccent, fontSize: 20, fontWeight: FontWeight.bold),
+                ))
+              : RestaurantList(restaurants: snapshot.data, id: id))
                 : Center(child: CircularProgressIndicator());
           },
         ),
@@ -218,7 +222,9 @@ class _ShowRestaurantState extends State<ShowRestaurant> {
 // For connection server
 // A function that converts a response body into a List<Photo>.
 List<Restaurant> parseRestaurants(String responseBody) {
+  print('삭제!');
   var restaurantJson = jsonDecode(responseBody)['poll_data'] as List;
+  print(restaurantJson);
   List restaurants = restaurantJson.map((tagJson) => Restaurant.fromJson(tagJson)).toList();
   return restaurants;
 }

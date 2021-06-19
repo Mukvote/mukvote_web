@@ -28,19 +28,22 @@ class _MenuListPageState extends State<MenuListPage> {
             ),
           ),
           actions: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.search,
-                color: Colors.deepPurpleAccent,
+            Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: IconButton(
+                icon: Icon(
+                  Icons.search,
+                  color: Colors.deepPurpleAccent,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => SearchPage(),
+                    ),
+                  ).then((value) => Navigator.pop(context));
+                },
               ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => SearchPage(),
-                  ),
-                ).then((value) => Navigator.pop(context));
-              },
             ),
           ],
           title: Text('먹VOTE',

@@ -1,8 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:mukvote_web/log_sign_in/login.dart';
 import 'class/item.dart';
 import 'package:http/http.dart' as http;
+
+import 'home.dart';
 
 class ResultTile extends StatefulWidget{
   ResultTile(this._restaurant, this.idx);
@@ -21,7 +24,7 @@ class _ResultTileState extends State<ResultTile> {
         padding: EdgeInsets.symmetric(horizontal: 20),
           child: Text((widget.idx + 1).toString(), style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold, color: Colors.black45),)),
       title: Text(widget._restaurant.name, style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold, color: Colors.black45),),
-      trailing: Text('${widget._restaurant.result*100}%', style: TextStyle(fontSize: 16, color: Colors.black45),),
+      trailing: Text('${(widget._restaurant.result*100).round()}%', style: TextStyle(fontSize: 16, color: Colors.black45),),
     );
   }
 }
@@ -72,15 +75,89 @@ class _TopResultTileState extends State<TopResultTile> {
             height: widget.idx == 0 ? 100 : 40 ,
         ),
         title: Text(widget._item.name, style: TextStyle(fontSize: widget.idx == 0 ? 20 : 18,fontWeight: FontWeight.bold, color: Colors.deepPurpleAccent),),
-        trailing: Text('${widget._item.result*100}%', style: TextStyle(fontSize: widget.idx == 0 ? 20 : 18, color: Colors.deepPurpleAccent),),
+        trailing: Text('${(widget._item.result*100).round()}%', style: TextStyle(fontSize: widget.idx == 0 ? 20 : 18, color: Colors.deepPurpleAccent),),
       ),
     );
   }
 }
 
-class ResultPage extends StatelessWidget{
+class ResultPage extends StatefulWidget{
   ResultPage(this.id);
   final String id;
+
+  @override
+  _ResultPageState createState() => _ResultPageState();
+}
+
+class _ResultPageState extends State<ResultPage> {
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Container(
+              height: 80,
+              color: Colors.deepPurpleAccent,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '방장이 아니네요ㅠ_ㅠ',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
+              )),
+          titlePadding: const EdgeInsets.all(0),
+          content:
+          Text('방장만 투표 종료를 할 수 있습니다^^'),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 0),
+                shadowColor: Colors.grey,
+                primary: Colors.deepPurpleAccent,
+                shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(15.0),
+                ), // background
+              ),
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                'CLOSE',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<DeleteResult> deleteAlbum(String id) async {
+    final http.Response response = await http.delete(
+      Uri.parse('http://127.0.0.1:5000/poll/$id/' + LoginPage.user_id.toString()),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200) {
+      // If the server did return a 201 CREATED response,
+      // then parse the JSON.
+      print(jsonDecode(response.body));
+      LoginPage.user_id =  DeleteResult.fromJson(jsonDecode(response.body)).result;
+      return DeleteResult.fromJson(jsonDecode(response.body));
+    } else {
+      // If the server did not return a 201 CREATED response,
+      // then throw an exception.
+      print('not delete in');
+      throw Exception('Failed to delete.');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +185,7 @@ class ResultPage extends StatelessWidget{
                 ),
                 SizedBox(height: 40,),
                 FutureBuilder<List<Result>>(
-                  future: fetchResult(http.Client(), id),
+                  future: fetchResult(http.Client(), widget.id),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) print(snapshot.error);
 
@@ -117,6 +194,39 @@ class ResultPage extends StatelessWidget{
                         : Center(child: CircularProgressIndicator());
                   },
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child:
+                    Container(
+                      height: 40.0,
+                      width: 120.0,
+                      child: FittedBox(
+                        child: FloatingActionButton.extended(
+                          onPressed: () {
+                            deleteAlbum(widget.id).then((value) => value.result == 0
+                                ? _showMyDialog()
+                                : Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => HomePage(),
+                              ),
+                            ));
+                          },
+                          materialTapTargetSize: MaterialTapTargetSize.padded,
+                          backgroundColor: Colors.deepPurpleAccent,
+                          icon: Icon(Icons.clear, size: 18,),
+                          label: Text("투표종료", style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
               ],
             ),
           ),
@@ -202,6 +312,19 @@ class Result {
       result: json['result'] as double,
       // category: json['restaurant_category'] as String,
       name: json['restaurant_name'] as String,
+    );
+  }
+}
+
+
+class DeleteResult {
+  final int result;
+
+  DeleteResult({this.result});
+
+  factory DeleteResult.fromJson(Map<String, dynamic> json) {
+    return DeleteResult(
+      result: json['delete_data'],
     );
   }
 }

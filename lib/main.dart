@@ -34,7 +34,7 @@ class _MuckVote extends State<MuckVote> {
       // home: VotePage(),
       onGenerateRoute: AppRouter.router.generator,
       initialRoute: '/login',
-      debugShowCheckedModeBanner: true,
+      debugShowCheckedModeBanner: false,
       // onGenerateRoute: _getRoute,
       routes: {
         '/login': (context) => LoginPage(),
